@@ -1,0 +1,42 @@
+body {
+  font-family: sans-serif;
+  background-color: rgb(22, 22, 22);
+}
+
+* {
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid white;
+  padding: 1em;
+  border-radius: 1em;
+  gap: 10px;
+}
+
+.rows {
+  display: flex;
+  gap: 10px;
+}
+
+.circle {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 1px solid white;
+  border-radius: 100vmax;
+  text-align: center;
+  align-content: center;
+  font-size: 1.5em;
+}
