@@ -57,6 +57,7 @@ body {
 
 .check {
   cursor: default;
+  pointer-events: none;
 }
 
 .circle-text {
