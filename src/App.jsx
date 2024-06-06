@@ -6,16 +6,21 @@ const TURNS = {
   player2: '🟡'
 }
 
-const Circle = ({ children, updateBoard, i, j }) => {
-  const handleClick = () => {
-    // console.log(i, j)
-    updateBoard(i, j)
-  }
-
+const Circle = ({ children, updateBoard, value, modal, i, j }) => {
   return (
-    <span className='circle' onClick={handleClick}>
-      {children}
-    </span>
+    <div className={`circle ${value || modal ? 'check' : ''}`} onClick={() => updateBoard(i, j)}>
+      <span className={`circle-text ${value ? 'fall-animation' : ''}`}>{children}</span>
+    </div>
+  )
+}
+
+const Modal = ({ children }) => {
+  return (
+    <div className='modal'>
+      <div className='modal-text'>
+        {children}
+      </div>
+    </div>
   )
 }
 
@@ -30,6 +35,7 @@ function App () {
   ])
 
   const [turn, setTurn] = useState(TURNS.player1)
+  const [winner, setWinner] = useState(null)
 
   const checkWinner = (board) => {
     const checkDirection = (row, col, rowDir, colDir) => {
@@ -68,6 +74,12 @@ function App () {
     return null
   }
 
+  const checkDraw = (board) => {
+    return board.every((row) => {
+      return row.every(circleValue => circleValue !== null)
+    })
+  }
+
   const updateBoard = (i, j) => {
     if (board[i][j]) return
     const newBoard = [...board]
@@ -83,14 +95,29 @@ function App () {
     const newTurn = turn === TURNS.player1 ? TURNS.player2 : TURNS.player1
     setTurn(newTurn)
 
-    const winner = checkWinner(newBoard)
-    if (winner) {
-      alert('Ganador')
+    const newWinner = checkWinner(newBoard)
+    if (newWinner) {
+      setWinner(newWinner)
+    } else if (checkDraw(newBoard)) {
+      setWinner(false)
     }
   }
 
+  const resetGame = () => {
+    setBoard([
+      Array(7).fill(null),
+      Array(7).fill(null),
+      Array(7).fill(null),
+      Array(7).fill(null),
+      Array(7).fill(null),
+      Array(7).fill(null)
+    ])
+    setTurn(TURNS.player1)
+    setWinner(null)
+  }
+
   return (
-    <>
+    <main className='board-container'>
       <h1>Conecta 4</h1>
       <section className='board'>
         <div className='container'>
@@ -101,7 +128,13 @@ function App () {
                   {
                     rows.map((columns, j) => {
                       return (
-                        <Circle key={j} updateBoard={updateBoard} i={i} j={j}>
+                        <Circle
+                          key={`${i}` + j}
+                          updateBoard={updateBoard}
+                          value={columns}
+                          i={i}
+                          j={j}
+                        >
                           {columns}
                         </Circle>
                       )
@@ -113,10 +146,33 @@ function App () {
           }
         </div>
       </section>
+
+      <section className='turns'>
+        <h2>Turno: {turn}</h2>
+      </section>
+
+      <button onClick={resetGame} className='btn'>Volver a jugar</button>
+
       {
-        turn
+        winner !== null && (
+          <Modal>
+            <h2>
+              {
+                winner === false
+                  ? 'Empate'
+                  : 'Ganador:'
+              }
+            </h2>
+            <div>
+              {winner && <Circle modal>{winner}</Circle>}
+            </div>
+            <div>
+              <button onClick={resetGame} className='btn'>Volver a jugar</button>
+            </div>
+          </Modal>
+        )
       }
-    </>
+    </main>
   )
 }
 
