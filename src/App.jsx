@@ -1,27 +1,12 @@
 import { useState } from 'react'
+import { Circle } from './components/Circle.jsx'
+import { Modal } from './components/Modal.jsx'
+import { checkWinner, checkDraw } from './logic/board.js'
 import './App.css'
 
 const TURNS = {
   player1: '🔴',
   player2: '🟡'
-}
-
-const Circle = ({ children, updateBoard, value, modal, i, j }) => {
-  return (
-    <div className={`circle ${value || modal ? 'check' : ''}`} onClick={() => updateBoard(i, j)}>
-      <span className={`circle-text ${value ? 'fall-animation' : ''}`}>{children}</span>
-    </div>
-  )
-}
-
-const Modal = ({ children }) => {
-  return (
-    <div className='modal'>
-      <div className='modal-text'>
-        {children}
-      </div>
-    </div>
-  )
 }
 
 function App () {
@@ -36,49 +21,6 @@ function App () {
 
   const [turn, setTurn] = useState(TURNS.player1)
   const [winner, setWinner] = useState(null)
-
-  const checkWinner = (board) => {
-    const checkDirection = (row, col, rowDir, colDir) => {
-      const player = board[row][col]
-      if (!player) return null
-
-      for (let i = 1; i < 4; i++) {
-        const newRow = row + i * rowDir
-        const newCol = col + i * colDir
-
-        if (
-          newRow < 0 ||
-          newRow >= board.length ||
-          newCol < 0 ||
-          newCol >= board[0].length ||
-          board[newRow][newCol] !== player
-        ) {
-          return null
-        }
-      }
-      return player
-    }
-
-    for (let row = 0; row < board.length; row++) {
-      for (let column = 0; column < board[0].length; column++) {
-        if (
-          checkDirection(row, column, 1, 0) || // Vertical
-          checkDirection(row, column, 0, 1) || // Horizontal
-          checkDirection(row, column, 1, 1) || // Diagonal descendente
-          checkDirection(row, column, 1, -1) // Diagonal ascendente
-        ) {
-          return board[row][column]
-        }
-      }
-    }
-    return null
-  }
-
-  const checkDraw = (board) => {
-    return board.every((row) => {
-      return row.every(circleValue => circleValue !== null)
-    })
-  }
 
   const updateBoard = (i, j) => {
     if (board[i][j]) return
