@@ -44,13 +44,13 @@ body {
 }
 
 .circle {
-  display: inline-block;
+  display: flex;
   width: 60px;
   height: 60px;
   border: 1px solid white;
   border-radius: 100vmax;
   text-align: center;
-  align-content: center;
+  align-items: center;
   cursor: pointer;
 }
   
@@ -60,6 +60,7 @@ body {
 }
     
 .circle-text {
+  width: 100%;
   font-size: 1.5em;
   display: block;
   text-align: center;
@@ -110,9 +111,11 @@ body {
   cursor: pointer;
 }
 
-.btn:hover {
-  background-color: white;
-  color: black;
+@media screen and (min-width: 540px) {
+  .btn:hover {
+    background-color: white;
+    color: black;
+  }
 }
 
 @media screen and (max-width: 540px) {
